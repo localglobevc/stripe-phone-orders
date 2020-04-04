@@ -1,5 +1,6 @@
 const BaseModel = require('./BaseModel');
 const md5 = require('../utils/md5');
+const db = require('../utils/db.js');
 const jwt = require('jsonwebtoken');
 
 const {
@@ -15,9 +16,9 @@ class User extends BaseModel {
     super();
 
     this.name;
-    this.email;
-    this.password;
-    this.admin;
+    this.detail;
+    this.price;
+    this.available;
   }
 
   static async login(email, password) {
@@ -33,7 +34,5 @@ class User extends BaseModel {
     }
   }
 }
-
-User.table = 'user';
 
 module.exports = User;

@@ -1,6 +1,6 @@
 const User = require('../models/User');
 
-const registerUserRoutes = (router) => {
+const registerProductRoutes = (router) => {
   router
     .post('/user/login', async (ctx, next) => {
       const {
@@ -16,9 +16,14 @@ const registerUserRoutes = (router) => {
         throw new Error('Password invalid');
       }
 
-      const login = await User.login(email, password);
-      return ctx.body = login;
+      const jwt = await User.login(email, password);
+      return ctx.body = {
+        jwt,
+      };
+    })
+    .get('/user', async (ctx, next) => {
+      return ctx.body = ctx.user;
     });
 };
 
-module.exports = registerUserRoutes;
+module.exports = registerProductRoutes;

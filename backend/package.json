@@ -16,6 +16,7 @@
     "@koa/cors": "^3.0.0",
     "@koa/router": "^8.0.8",
     "dotenv": "^8.2.0",
+    "jsonwebtoken": "^8.5.1",
     "knex": "^0.20.13",
     "koa": "^2.11.0",
     "koa-bodyparser": "^4.3.0",

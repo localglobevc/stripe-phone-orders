@@ -13,6 +13,7 @@
   "rules": {
     "indent": ["error", 2],
     "no-unused-vars": 1,
-    "require-jsdoc": 0
+    "require-jsdoc": 0,
+    "max-len": 0
   }
 }

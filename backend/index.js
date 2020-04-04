@@ -5,10 +5,13 @@ const app = new Koa();
 const Router = require('@koa/router');
 const cors = require('@koa/cors');
 const bodyParser = require('koa-bodyparser');
+const jwt = require('jsonwebtoken');
 
 const registerUserRoutes = require('./routes/user.js');
 
-const {} = process.env;
+const {
+  SECRET,
+} = process.env;
 
 app
   .use(bodyParser())
@@ -25,6 +28,26 @@ app.use(async (ctx, next) => {
       error: e.message,
     });
     ctx.response.status = 500;
+  }
+});
+
+// Urls to allow without authentication
+const publicUrls = [
+  '/user/login',
+];
+
+// Ensure user is authenticated
+app.use(async (ctx, next) => {
+  const authorization = ctx.request.header.authorization;
+
+  if (
+    (authorization && jwt.verify(authorization, SECRET)) || // User is authorised OR
+    publicUrls.indexOf(ctx.url) > -1 // User is accessing a public URL
+  ) {
+    ctx.user = jwt.decode(authorization);
+    await next();
+  } else {
+    throw new Error('User not authenticated');
   }
 });
 
