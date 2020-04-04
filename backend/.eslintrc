@@ -1,0 +1,18 @@
+{
+  "extends": "google",
+  "env": {
+    "node": true,
+    "es6": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2017,
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "rules": {
+    "indent": ["error", 2],
+    "no-unused-vars": 1,
+    "require-jsdoc": 0
+  }
+}

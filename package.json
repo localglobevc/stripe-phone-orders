@@ -1,0 +1,19 @@
+{
+  "name": "stripe-phone-orders",
+  "version": "1.0.0",
+  "description": "Interface to allow phone staff to take payments from callers, a workflow tool for charity sector volunteers",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/localglobevc/stripe-phone-orders.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/localglobevc/stripe-phone-orders/issues"
+  },
+  "homepage": "https://github.com/localglobevc/stripe-phone-orders#readme"
+}
