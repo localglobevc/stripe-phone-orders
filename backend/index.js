@@ -1,3 +1,4 @@
+require('dotenv').config();
 const send = require('koa-send');
 const Koa = require('koa');
 const app = new Koa();
@@ -15,6 +16,19 @@ app
 
 const router = new Router();
 
+// Safe error handling
+app.use(async (ctx, next) => {
+  try {
+    await next();
+  } catch (e) {
+    ctx.body = JSON.stringify({
+      error: e.message,
+    });
+    ctx.response.status = 500;
+  }
+});
+
+// Register app routes
 registerUserRoutes(router);
 
 app

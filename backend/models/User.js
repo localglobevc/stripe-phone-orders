@@ -1,5 +1,7 @@
 const BaseModel = require('./BaseModel');
 const md5 = require('../utils/md5');
+const db = require('../utils/db.js');
+
 /**
  * An instance of a user
  * @class
@@ -16,6 +18,10 @@ class User extends BaseModel {
 
   static async findOne(options = {}) {
     // Returns a single user
+    const user = await db('users')
+      .where(options);
+
+    return user;
   }
 
   async update(options = {}) {
@@ -24,20 +30,12 @@ class User extends BaseModel {
 
   static async login(email, password) {
     try {
-      if (!email) {
-        throw new Error('Email address invalid');
-      }
-
-      if (!password) {
-        throw new Error('Password invalid');
-      }
-
       const user = this.findOne({
         email,
         password: md5(password),
       });
 
-      return true;
+      return user;
     } catch (e) {
       return e.message;
     }
