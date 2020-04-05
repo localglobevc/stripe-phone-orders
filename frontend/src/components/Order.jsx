@@ -57,6 +57,7 @@ const Order = () => {
     addressLineOne: '',
     addressCity: '',
     addressPostalCode: '',
+    notes: '',
   });
 
 
@@ -81,8 +82,8 @@ const Order = () => {
     setDetails({
       ...details,
       ...updated,
-    })
-  }
+    });
+  };
 
   const totalQuantity = products.reduce((acc, product) => acc + parseInt(product.quantity, 10), 0);
   const totalPrice = products.reduce((acc, product) => acc + parseInt(product.quantity, 10) * parseFloat(product.price, 10), 0) + 5;
@@ -111,6 +112,7 @@ const Order = () => {
                         disabled={!product.available}
                         action={{icon: 'plus', onClick: () => handleQuantityChange(product.id, parseInt(product.quantity, 10) + 1), disabled: !product.available}}
                         onChange={(e, data) => handleQuantityChange(product.id, data.value)}
+                        size="mini"
                       />
                     </Item.Description>
                   </Item.Content>
@@ -146,6 +148,10 @@ const Order = () => {
               </Form.Group>
               <p>Payment Details</p>
               <PaymentDetails />
+              <p>Notes</p>
+              <Form.Group widths="equal">
+                <Form.TextArea placeholder="Dietary requirements, delivery instructions, resident is blind..." value={details.notes} onChange={(e, data) => handleDetailsChange('notes', data.value)} />
+              </Form.Group>
               <Form.Button fluid as={PrimaryButton}>Complete</Form.Button>
             </Form>
           </div>
