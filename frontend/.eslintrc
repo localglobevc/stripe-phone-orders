@@ -10,6 +10,8 @@
     "max-len": 0,
     "object-curly-spacing": [2, "never"],
     "arrow-body-style": 1,
-    "react/prop-types": 0
+    "react/prop-types": 0,
+    "import/no-unresolved": 0,
+    "import/extensions": 0
   }
 }

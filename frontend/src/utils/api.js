@@ -4,14 +4,15 @@ let innerToken = '';
 
 const BASE = 'http://localhost:8080';
 
-
 const api = (url, options = {}) => fetch(`${BASE}${url}`, options)
-  .then((res) => res.json())
-  .then((data) => {
-    if (!data || !data.result === 'success') {
-      throw new Error(data.error);
+  .then((res) => {
+    if (!res.ok) {
+      return res.json()
+        .then((data) => {
+          throw new Error(data.error ? data.error : res.status);
+        });
     }
-    return data;
+    return res.json();
   });
 
 const mergeHeaders = (headers = {}) => {

@@ -2,10 +2,10 @@
 
 import React, {useState} from 'react';
 import styled, {css} from 'styled-components';
-import {Grid, Form, Button} from 'semantic-ui-react';
-import Cookies from 'js-cookie';
+import {Grid, Form} from 'semantic-ui-react';
 
 import {POST} from '../utils/api';
+import {saveAuth} from '../utils/auth';
 
 const StyledGrid = styled(Grid)`
   height: 100%;
@@ -36,8 +36,8 @@ const Login = ({history}) => {
     setLoading(true);
     POST('/user/login', {email, password})
       .then((response) => {
-        Cookies.set('authorization', response.jwt);
-        history.push('/home');
+        saveAuth(response.jwt);
+        history.push('/order');
       });
   };
 
