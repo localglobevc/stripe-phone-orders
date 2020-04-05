@@ -8,6 +8,7 @@ const bodyParser = require('koa-bodyparser');
 const jwt = require('jsonwebtoken');
 
 const registerUserRoutes = require('./routes/user.js');
+const User = require('./models/User');
 
 const {
   SECRET,
@@ -40,14 +41,17 @@ const publicUrls = [
 app.use(async (ctx, next) => {
   const authorization = ctx.request.header.authorization;
 
-  if (
-    (authorization && jwt.verify(authorization, SECRET)) || // User is authorised OR
-    publicUrls.indexOf(ctx.url) > -1 // User is accessing a public URL
-  ) {
+  let user = false;
+  try {
+    const authUser = jwt.verify(authorization, SECRET);
+    user = await User.checkUser(authUser.email, authUser.password);
     ctx.user = jwt.decode(authorization);
-    await next();
-  } else {
-    throw new Error('User not authenticated');
+  } finally {
+    if (user || publicUrls.indexOf(ctx.url) > -1) {
+      await next();
+    } else {
+      throw new Error('User not authenticated');
+    }
   }
 });
 

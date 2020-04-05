@@ -21,15 +21,26 @@ class User extends BaseModel {
   }
 
   static async login(email, password) {
+    const user = await this.findOne({
+      email: email.toLowerCase(), // Force lowercase email
+      password: md5(password),
+    });
+
+    return jwt.sign({name: user.name, email: user.email, password: user.password, admin: user.admin}, SECRET, {expiresIn: '48h'});
+  }
+
+  static async checkUser(email, password) {
     try {
       const user = await this.findOne({
-        email: email.toLowerCase(), // Force lowercase email
-        password: md5(password),
+        email: email, // Force lowercase email
+        password: password,
       });
 
-      return jwt.sign({email: user.email, admin: user.admin}, SECRET, {expiresIn: '48h'});
+      if (user) {
+        return true;
+      }
     } catch (e) {
-      return e.message;
+      return false;
     }
   }
 }
