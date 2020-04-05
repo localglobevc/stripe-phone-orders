@@ -8,6 +8,8 @@ const bodyParser = require('koa-bodyparser');
 const jwt = require('jsonwebtoken');
 
 const registerUserRoutes = require('./routes/user.js');
+const registerProductRoutes = require('./routes/product.js');
+const registerCustomerRoutes = require('./routes/customer.js');
 const User = require('./models/User');
 
 const {
@@ -57,6 +59,8 @@ app.use(async (ctx, next) => {
 
 // Register app routes
 registerUserRoutes(router);
+registerProductRoutes(router);
+registerCustomerRoutes(router);
 
 app
   .use(router.routes())

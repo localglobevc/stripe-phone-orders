@@ -1,10 +1,4 @@
 const BaseModel = require('./BaseModel');
-const md5 = require('../utils/md5');
-const jwt = require('jsonwebtoken');
-
-const {
-  SECRET,
-} = process.env;
 
 /**
  * An instance of a product
@@ -21,6 +15,6 @@ class Product extends BaseModel {
   }
 }
 
-User.table = 'product';
+Product.table = 'product';
 
 module.exports = Product;

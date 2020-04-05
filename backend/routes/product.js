@@ -1,18 +1,11 @@
-const BaseModel = require('./BaseModel');
+const Product = require('../models/Product');
 
-/**
- * An instance of a user
- * @class
- */
-class User extends BaseModel {
-  constructor() {
-    super();
+const registerProductRoutes = (router) => {
+  router
+    .get('/product', async (ctx, next) => {
+      const products = await Product.find().orderBy('available', 'DESC');
+      return ctx.body = products;
+    });
+};
 
-    this.name;
-    this.detail;
-    this.price;
-    this.available;
-  }
-}
-
-module.exports = User;
+module.exports = registerProductRoutes;

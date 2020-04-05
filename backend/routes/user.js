@@ -1,6 +1,6 @@
 const User = require('../models/User');
 
-const registerProductRoutes = (router) => {
+const registerUserRoutes = (router) => {
   router
     .post('/user/login', async (ctx, next) => {
       const {
@@ -26,4 +26,4 @@ const registerProductRoutes = (router) => {
     });
 };
 
-module.exports = registerProductRoutes;
+module.exports = registerUserRoutes;

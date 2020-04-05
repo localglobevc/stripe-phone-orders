@@ -10,16 +10,18 @@ class BaseModel {
   }
 
   static async findOne(options = {}) {
-    // Returns a single user
-    console.log(this);
-    const items = await db(this.table)
-      .where(options);
+    const items = await this.find(options);
 
     if (items && items[0]) {
       return items[0];
     } else {
       throw new Error('Not found');
     }
+  }
+
+  static find(options = {}) {
+    return db(this.table)
+      .where(options);
   }
 }
 
