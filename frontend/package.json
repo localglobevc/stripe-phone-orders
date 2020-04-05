@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@babel/core": "7.9.0",
+    "@quickbaseoss/babel-plugin-styled-components-css-namespace": "^1.0.0-rc4",
     "@svgr/webpack": "4.3.3",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -20,13 +21,14 @@
     "css-loader": "3.4.2",
     "dotenv": "8.2.0",
     "dotenv-expand": "5.1.0",
-    "eslint": "^6.6.0",
+    "eslint": "^6.8.0",
+    "eslint-config-google": "^0.14.0",
     "eslint-config-react-app": "^5.2.1",
     "eslint-loader": "3.0.3",
     "eslint-plugin-flowtype": "4.6.0",
     "eslint-plugin-import": "2.20.1",
     "eslint-plugin-jsx-a11y": "6.2.3",
-    "eslint-plugin-react": "7.19.0",
+    "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^1.6.1",
     "file-loader": "4.3.0",
     "fs-extra": "^8.1.0",
@@ -51,8 +53,10 @@
     "resolve": "1.15.0",
     "resolve-url-loader": "3.1.1",
     "sass-loader": "8.0.2",
+    "semantic-ui-react": "^0.88.2",
     "semver": "6.3.0",
     "style-loader": "0.23.1",
+    "styled-components": "^5.0.1",
     "terser-webpack-plugin": "2.3.5",
     "ts-pnp": "1.1.6",
     "url-loader": "2.3.0",
@@ -134,6 +138,15 @@
   "babel": {
     "presets": [
       "react-app"
+    ],
+    "plugins": [
+      [
+        "@quickbaseoss/babel-plugin-styled-components-css-namespace",
+        {"cssNamespace": "&&&&&"}
+      ]
     ]
+  },
+  "devDependencies": {
+    "eslint-config-airbnb": "^18.1.0"
   }
 }
