@@ -48,7 +48,7 @@ app.use(async (ctx, next) => {
     const authUser = jwt.verify(authorization, SECRET);
     user = await User.checkUser(authUser.email, authUser.password);
     ctx.user = jwt.decode(authorization);
-  } finally {
+  } catch (e) {} finally {
     if (user || publicUrls.indexOf(ctx.url) > -1) {
       await next();
     } else {
@@ -71,4 +71,4 @@ app.use(async (ctx) => {
   return await send(ctx, ctx.path, {root: __dirname + '/public'});
 });
 
-app.listen(3000);
+app.listen(8080);

@@ -1,6 +1,11 @@
-import React from 'react';
+/* eslint react/prop-types: 0 */
+
+import React, {useState} from 'react';
 import styled, {css} from 'styled-components';
 import {Grid, Form, Button} from 'semantic-ui-react';
+import Cookies from 'js-cookie';
+
+import {POST} from '../utils/api';
 
 const StyledGrid = styled(Grid)`
   height: 100%;
@@ -20,7 +25,22 @@ const StyledGridInner = styled.div`
   vertical-align: middle;
 `;
 
-const Login = () => {
+const Login = ({history}) => {
+  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleEmail = (e, data) => setEmail(data.value);
+  const handlePassword = (e, data) => setPassword(data.value);
+  const handleLogin = () => {
+    setLoading(true);
+    POST('/user/login', {email, password})
+      .then((response) => {
+        Cookies.set('authorization', response.jwt);
+        history.push('/home');
+      });
+  };
+
   return (
     <StyledGrid columns="equal">
       <StyledColumn background="#E1F0EA">
@@ -31,13 +51,13 @@ const Login = () => {
       <StyledColumn>
         <StyledGridInner>
           <div style={{width: '300px', display: 'inline-block'}}>
-            <Form>
+            <Form loading={loading}>
               <Form.Group widths="equal">
-                <Form.Input fluid placeholder="Email" />
+                <Form.Input fluid placeholder="Email" value={email} onChange={handleEmail} />
               </Form.Group>
               <Form.Group widths="equal">
-                <Form.Input fluid placeholder="Password" />
-                <Form.Button fluid>Login</Form.Button>
+                <Form.Input fluid placeholder="Password" type="password" value={password} onChange={handlePassword} />
+                <Form.Button fluid onClick={handleLogin}>Login</Form.Button>
               </Form.Group>
             </Form>
           </div>
