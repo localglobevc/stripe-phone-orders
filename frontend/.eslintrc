@@ -1,0 +1,17 @@
+{
+  "env": {
+    "browser": true
+  },
+  "extends": "airbnb",
+  "rules": {
+    "indent": ["error", 2],
+    "no-unused-vars": 1,
+    "require-jsdoc": 0,
+    "max-len": 0,
+    "object-curly-spacing": [2, "never"],
+    "arrow-body-style": 1,
+    "react/prop-types": 0,
+    "import/no-unresolved": 0,
+    "import/extensions": 0
+  }
+}
