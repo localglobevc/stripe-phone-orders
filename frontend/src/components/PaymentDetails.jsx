@@ -1,9 +1,6 @@
 import React from 'react';
 import {
   CardElement,
-  Elements,
-  useStripe,
-  useElements,
 } from '@stripe/react-stripe-js';
 import styled from 'styled-components';
 

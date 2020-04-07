@@ -9,13 +9,19 @@ import {
   Button,
   Form,
   Divider,
+  Modal,
 } from 'semantic-ui-react';
 import Cookies from 'js-cookie';
+import {
+  useStripe,
+  useElements,
+  CardElement,
+} from '@stripe/react-stripe-js';
 
 import {PrimaryButton} from './CommonStyles';
 import PaymentDetails from './PaymentDetails';
 
-import {GET} from '../utils/api';
+import {GET, POST} from '../utils/api';
 
 const StyledGrid = styled(Grid)`
   height: 100%;
@@ -50,6 +56,10 @@ const productSort = (a, b) => {
 };
 
 const Order = () => {
+  const stripe = useStripe();
+  const elements = useElements();
+
+  const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
   const [details, setDetails] = useState({
     name: '',
@@ -83,6 +93,50 @@ const Order = () => {
       ...details,
       ...updated,
     });
+  };
+
+  const handleComplete = () => {
+    setLoading(true);
+    POST('/order/intent', {
+      products: products.filter(({quantity}) => quantity > 0).map(({id, quantity}) => ({id, quantity})),
+      deliveryId: 1, // Hardcoded for now
+    })
+      .then(({secret}) => {
+        return stripe.confirmCardPayment(secret, {
+          payment_method: {
+            card: elements.getElement(CardElement),
+            billing_details: {
+              name: details.name,
+              phone: details.phone,
+            },
+          },
+        })
+          .then((result) => {
+            if (result.error || result.paymentIntent.status !== 'succeeded') {
+              // something
+              alert(`There was a problem processing the payment: ${result.error.message}`);
+              return Promise.reject();
+            }
+
+            return POST('/order/finalise', {
+              ...details,
+              intent: result.paymentIntent.id,
+            });
+          })
+          .then((result) => {
+            if (result.success !== true) {
+              // Success
+              alert('There was a problem processing the payment. Please contact an administrator.');
+              return Promise.reject();
+            }
+            alert('The payment was successful. The page will now reset.');
+            window.location.reload();
+            return Promise.resolve();
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      });
   };
 
   const totalQuantity = products.reduce((acc, product) => acc + parseInt(product.quantity, 10), 0);
@@ -128,13 +182,13 @@ const Order = () => {
             <h1>{`Order Total: £${totalPrice}`}</h1>
             <p>Including £5 delivery charge</p>
             <Divider />
-            <Form>
+            <Form loading={loading}>
               <p>Basic Details</p>
               <Form.Group widths="equal">
                 <Form.Input fluid placeholder="Name" value={details.name} onChange={(e, data) => handleDetailsChange('name', data.value)} />
               </Form.Group>
               <Form.Group widths="equal">
-                <Form.Input fluid placeholder="Phone Number" value={details.phone} onChange={(e, data) => handleDetailsChange('phone', data.phone)} />
+                <Form.Input fluid placeholder="Phone Number" value={details.phone} onChange={(e, data) => handleDetailsChange('phone', data.value)} />
               </Form.Group>
               <p>Delivery Address</p>
               <Form.Group widths="equal">
@@ -152,7 +206,7 @@ const Order = () => {
               <Form.Group widths="equal">
                 <Form.TextArea placeholder="Dietary requirements, delivery instructions, resident is blind..." value={details.notes} onChange={(e, data) => handleDetailsChange('notes', data.value)} />
               </Form.Group>
-              <Form.Button fluid as={PrimaryButton}>Complete</Form.Button>
+              <Form.Button fluid as={PrimaryButton} onClick={handleComplete} disabled={totalQuantity === 0}>Complete</Form.Button>
             </Form>
           </div>
         </StyledGridInner>

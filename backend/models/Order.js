@@ -4,6 +4,7 @@ const {
 
 const BaseModel = require('./BaseModel');
 const stripe = require('stripe')(STRIPE_SECRET_KEY);
+const db = require('../utils/db.js');
 
 /**
  * An instance of a order
@@ -29,12 +30,31 @@ class Order extends BaseModel {
   //   });
   // }
 
-  static createIntent(totalPricePence) {
+  static createIntent(totalPricePence, description, data) {
     return stripe.paymentIntents.create({
       amount: totalPricePence,
       currency: 'gbp',
       payment_method_types: ['card'],
+      metadata: {
+        description,
+        data,
+      },
     });
+  }
+
+  static getIntent(intent) {
+    return stripe.paymentIntents.retrieve(intent);
+  }
+
+  static async create(orderData, products) {
+    const order = await db(this.table).insert(orderData).returning('id');
+    for (const product of products) {
+      const newProduct = product;
+      newProduct.order_id = order[0];
+      await db('order_items').insert(newProduct);
+    }
+
+    return true;
   }
 }
 
