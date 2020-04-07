@@ -7,9 +7,15 @@ const cors = require('@koa/cors');
 const bodyParser = require('koa-bodyparser');
 const jwt = require('jsonwebtoken');
 
+// POSTGRES NUMBER FIX
+const pg = require('pg');
+const PG_DECIMAL_OID = 1700;
+pg.types.setTypeParser(PG_DECIMAL_OID, parseFloat);
+
 const registerUserRoutes = require('./routes/user.js');
 const registerProductRoutes = require('./routes/product.js');
 const registerCustomerRoutes = require('./routes/customer.js');
+const registerOrderRoutes = require('./routes/order.js');
 const User = require('./models/User');
 
 const {
@@ -61,6 +67,7 @@ app.use(async (ctx, next) => {
 registerUserRoutes(router);
 registerProductRoutes(router);
 registerCustomerRoutes(router);
+registerOrderRoutes(router);
 
 app
   .use(router.routes())

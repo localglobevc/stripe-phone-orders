@@ -5,8 +5,14 @@ const db = require('../utils/db.js');
  * @class
  */
 class BaseModel {
-  constructor() {
+  constructor(obj) {
     this.table;
+
+    for (property in obj) {
+      if (obj.hasOwnProperty(property)) {
+        this[item] = obj[item];
+      }
+    }
   }
 
   static async findOne(options = {}) {
@@ -22,6 +28,10 @@ class BaseModel {
   static find(options = {}) {
     return db(this.table)
       .where(options);
+  }
+
+  static exec(chain) {
+    return chain(db(this.table));
   }
 }
 
